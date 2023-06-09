@@ -1,0 +1,272 @@
+<!-- 
+    Group 55 - Erwin Laird and Amanda Dohring - Project Step 6
+
+    Citation for code adapted from CS340 Node.js Starter App
+    Date: 6/12/2023
+    Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main
+ -->
+
+<!-- cities.hbs -->
+{{!-- Cities table --}}
+
+<head>
+    <title>Cities</title>
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('/myfont.otf') format('opentype');
+        }
+
+        #navigation-placeholder a.current,
+        #navigation-placeholder a[href="/cities"] {
+            color: rgb(240,112,103);
+            font-family: 'CustomFont', sans-serif;
+            font-size: 40px;
+        }
+
+        th {
+            background-color: rgba(214, 185, 185, 0.733);
+        }
+    </style>
+</head>
+
+<div id="browse">
+    <table id="cities-table" border="3" cellpadding="10">
+        <thead>
+            <br>
+            <tr>
+                <th>City ID</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Region</th>
+                <th>Population</th>
+                <th>Timezone</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{!-- For each row, print each column from the db for Cities entity --}}
+            {{#each data}}
+            <tr data-value="{{this.city_id}}">
+                <td>{{this.city_id}}</td>
+                <td>{{this.city}}</td>
+                <td>{{this.state}}</td>
+                <td>{{this.region}}</td>
+                <td>{{this.population}}</td>
+                <td>{{this.timezone}}</td>
+                <td>
+                    <a href="#" onClick="updateCity('{{this.city_id}}')">
+                        <img src="/images/edit.png" alt="Edit" style="max-width: 18px; max-height: 80px; opacity: 0.7;" />
+                    </a>
+                </td>
+                <td>
+                    <a href="#" onClick="deleteCity('{{this.city_id}}')">
+                        <img src="/images/delete.png" alt="Delete" style="max-width: 15px; max-height: 80px; opacity: 0.7;" />
+                    </a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table><br>
+    <a id="addIcon" href="#" onClick="addCity()">
+        <img src="/images/add.png" alt="Add" style="max-width: 100px; max-height: 80px; opacity: 0.7;" />
+    </a>
+</div>
+
+<div id="insert" style="display: none;">
+    <h2>Add a New City</h2>
+    <form id="add-city-form">
+        <fieldset class="fields">
+        <div class="inner-border">
+            <label for="input-city"> City </label>
+            <input type="text" name="input-city" id="input-city" required><br><br>
+
+            <label for="input-state"> State </label>
+            <select name="input-state" id="input-state" required>
+                <option value="">&nbsp;</option>
+                <option value="Alabama">Alabama</option>
+                <option value="Alaska">Alaska</option>
+                <option value="Arizona">Arizona</option>
+                <option value="Arkansas">Arkansas</option>
+                <option value="California">California</option>
+                <option value="Colorado">Colorado</option>
+                <option value="Connecticut">Connecticut</option>
+                <option value="Delaware">Delaware</option>
+                <option value="Florida">Florida</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Hawaii">Hawaii</option>
+                <option value="Idaho">Idaho</option>
+                <option value="Illinois">Illinois</option>
+                <option value="Indiana">Indiana</option>
+                <option value="Iowa">Iowa</option>
+                <option value="Kansas">Kansas</option>
+                <option value="Kentucky">Kentucky</option>
+                <option value="Louisiana">Louisiana</option>
+                <option value="Maine">Maine</option>
+                <option value="Maryland">Maryland</option>
+                <option value="Massachusetts">Massachusetts</option>
+                <option value="Michigan">Michigan</option>
+                <option value="Minnesota">Minnesota</option>
+                <option value="Mississippi">Mississippi</option>
+                <option value="Missouri">Missouri</option>
+                <option value="Montana">Montana</option>
+                <option value="Nebraska">Nebraska</option>
+                <option value="Nevada">Nevada</option>
+                <option value="New Hampshire">New Hampshire</option>
+                <option value="New Jersey">New Jersey</option>
+                <option value="New Mexico">New Mexico</option>
+                <option value="New York">New York</option>
+                <option value="North Carolina">North Carolina</option>
+                <option value="North Dakota">North Dakota</option>
+                <option value="Ohio">Ohio</option>
+                <option value="Oklahoma">Oklahoma</option>
+                <option value="Oregon">Oregon</option>
+                <option value="Pennsylvania">Pennsylvania</option>
+                <option value="Rhode Island">Rhode Island</option>
+                <option value="South Carolina">South Carolina</option>
+                <option value="South Dakota">South Dakota</option>
+                <option value="Tennessee">Tennessee</option>
+                <option value="Texas">Texas</option>
+                <option value="Utah">Utah</option>
+                <option value="Vermont">Vermont</option>
+                <option value="Virginia">Virginia</option>
+                <option value="Washington">Washington</option>
+                <option value="West Virginia">West Virginia</option>
+                <option value="Wisconsin">Wisconsin</option>
+                <option value="Wyoming">Wyoming</option>
+            </select><br><br>
+
+            <label for="input-region"> Region </label>
+            <select name="input-region" id="input-region" required>
+                <option value="">&nbsp;</option>
+                <option value="New England">New England</option>
+                <option value="Mideast">Mideast</option>
+                <option value="Great Lakes">Great Lakes</option>
+                <option value="Plains">Plains</option>
+                <option value="Southeast">Southeast</option>
+                <option value="Southwest">Southwest</option>
+                <option value="Rocky Mountain">Rocky Mountain</option>
+                <option value="Far West">Far West</option>
+            </select><br><br>
+
+            <label for="input-population"> Population </label>
+            <input type="number" name="input-population" id="input-population" required><br><br>
+
+            <label for="input-timezone"> Timezone </label>
+            <select name="input-timezone" id="input-timezone" required>
+                <option value="">&nbsp;</option>
+                <option value="Eastern">Eastern</option>
+                <option value="Central">Central</option>
+                <option value="Mountain">Mountain</option>
+                <option value="Pacific">Pacific</option>
+                <option value="Alaska">Alaska</option>
+                <option value="Hawaii">Hawaii</option>
+            </select><br>
+        </div>
+        </fieldset><br><br>
+        <input class="btn" type="submit" value="Save">
+        <input class="btn" type="button" value="Cancel" onClick="cancelAdd()">
+    </form>
+</div>
+
+<div id="update" style="display: none;">
+    <h2>Edit City</h2>
+    <form id="update-city-form">
+        <fieldset class="fields">
+        <div class="inner-border">
+            <label for="update-city"> City </label>
+            <input type="text" name="update-city" id="update-city" required><br><br>
+
+            <label for="update-state"> State </label>
+            <select name="update-state" id="update-state" required>
+                <option value="">&nbsp;</option>
+                <option value="Alabama">Alabama</option>
+                <option value="Alaska">Alaska</option>
+                <option value="Arizona">Arizona</option>
+                <option value="Arkansas">Arkansas</option>
+                <option value="California">California</option>
+                <option value="Colorado">Colorado</option>
+                <option value="Connecticut">Connecticut</option>
+                <option value="Delaware">Delaware</option>
+                <option value="Florida">Florida</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Hawaii">Hawaii</option>
+                <option value="Idaho">Idaho</option>
+                <option value="Illinois">Illinois</option>
+                <option value="Indiana">Indiana</option>
+                <option value="Iowa">Iowa</option>
+                <option value="Kansas">Kansas</option>
+                <option value="Kentucky">Kentucky</option>
+                <option value="Louisiana">Louisiana</option>
+                <option value="Maine">Maine</option>
+                <option value="Maryland">Maryland</option>
+                <option value="Massachusetts">Massachusetts</option>
+                <option value="Michigan">Michigan</option>
+                <option value="Minnesota">Minnesota</option>
+                <option value="Mississippi">Mississippi</option>
+                <option value="Missouri">Missouri</option>
+                <option value="Montana">Montana</option>
+                <option value="Nebraska">Nebraska</option>
+                <option value="Nevada">Nevada</option>
+                <option value="New Hampshire">New Hampshire</option>
+                <option value="New Jersey">New Jersey</option>
+                <option value="New Mexico">New Mexico</option>
+                <option value="New York">New York</option>
+                <option value="North Carolina">North Carolina</option>
+                <option value="North Dakota">North Dakota</option>
+                <option value="Ohio">Ohio</option>
+                <option value="Oklahoma">Oklahoma</option>
+                <option value="Oregon">Oregon</option>
+                <option value="Pennsylvania">Pennsylvania</option>
+                <option value="Rhode Island">Rhode Island</option>
+                <option value="South Carolina">South Carolina</option>
+                <option value="South Dakota">South Dakota</option>
+                <option value="Tennessee">Tennessee</option>
+                <option value="Texas">Texas</option>
+                <option value="Utah">Utah</option>
+                <option value="Vermont">Vermont</option>
+                <option value="Virginia">Virginia</option>
+                <option value="Washington">Washington</option>
+                <option value="West Virginia">West Virginia</option>
+                <option value="Wisconsin">Wisconsin</option>
+                <option value="Wyoming">Wyoming</option>
+            </select><br><br>
+
+            <label for="update-region"> Region </label>
+            <select name="update-region" id="update-region" required>
+                <option value="">&nbsp;</option>
+                <option value="New England">New England</option>
+                <option value="Mideast">Mideast</option>
+                <option value="Great Lakes">Great Lakes</option>
+                <option value="Plains">Plains</option>
+                <option value="Southeast">Southeast</option>
+                <option value="Southwest">Southwest</option>
+                <option value="Rocky Mountain">Rocky Mountain</option>
+                <option value="Far West">Far West</option>
+            </select><br><br>
+
+            <label for="update-population"> Population </label>
+            <input type="number" name="update-population" id="update-population" required><br><br>
+
+            <label for="update-timezone"> Timezone </label>
+            <select name="update-timezone" id="update-timezone" required>
+                <option value="">&nbsp;</option>
+                <option value="Eastern">Eastern</option>
+                <option value="Central">Central</option>
+                <option value="Mountain">Mountain</option>
+                <option value="Pacific">Pacific</option>
+                <option value="Alaska">Alaska</option>
+                <option value="Hawaii">Hawaii</option>
+            </select><br>
+        </div>
+        </fieldset><br><br>
+        <input class="btn" type="submit" value="Save Changes">
+        <input class="btn" type="button" value="Cancel" onClick="cancelUpdate()">
+    </form>
+</div>
+
+<script src="./js/add_city.js"></script>
+<script src="./js/delete_city.js"></script>
+<script src="./js/update_city.js"></script>

@@ -1,0 +1,178 @@
+<!-- 
+    Group 55 - Erwin Laird and Amanda Dohring - Project Step 6
+
+    Citation for code adapted from CS340 Node.js Starter App
+    Date: 6/12/2023
+    Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main
+ -->
+ 
+<!-- users.hbs -->
+{{!-- Users table --}}
+
+<head>
+    <title>Users</title>
+    <link href="/css/style.css" rel="stylesheet" type="text/css" />
+    <style>
+        @font-face {
+            font-family: 'CustomFont';
+            src: url('/myfont.otf') format('opentype');
+        }
+
+        #navigation-placeholder a.current,
+        #navigation-placeholder a[href="/users"] {
+            color: rgb(240,112,103);
+            font-family: 'CustomFont', sans-serif;
+            font-size: 40px;
+        }
+        
+        th {
+            background-color: rgba(214, 185, 185, 0.733);
+        }
+    </style>
+</head>
+
+<div id="browse">
+    <table id="users-table" style="display:table;" border="3" cellpadding="10">
+        <thead>
+            <br>
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Gender</th>
+                <th>Race/Ethnicity</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{!-- For each row, print each column from the db for Users entity --}}
+            {{#each data}}
+            <tr data-value="{{this.user_id}}">
+                <td>{{this.user_id}}</td>
+                <td>{{this.username}}</td>
+                <td>{{this.user_fname}}</td>
+                <td>{{this.user_lname}}</td>
+                <td>{{this.email}}</td>
+                <td>{{this.gender}}</td>
+                <td>{{this.race_ethnicity}}</td>
+                <td>
+                    <a href="#" onClick="updateUser('{{this.user_id}}')">
+                        <img src="/images/edit.png" alt="Edit" style="max-width: 18px; max-height: 80px; opacity: 0.7;" />
+                    </a>
+                </td>
+                <td>
+                    <a href="#" onClick="deleteUser('{{this.user_id}}')">
+                        <img src="/images/delete.png" alt="Delete" style="max-width: 15px; max-height: 80px; opacity: 0.7;" />
+                    </a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table><br>
+    <a id="addIcon" href="#" onClick="addUser()">
+        <img src="/images/add.png" alt="Add" style="max-width: 100px; max-height: 80px; opacity: 0.7;" />
+    </a>
+</div>
+
+<div id="insert" style="display: none;">
+    <h2>Add a New User</h2>
+    <form id="add-user-form">
+        <fieldset class="fields">
+        <div class="inner-border">
+            <label for="input-username"> Username </label>
+            <input type="text" name="input-username" id="input-username" required><br><br>
+
+            <label for="input-fname"> First Name </label>
+            <input type="text" name="input-fname" id="input-fname" required><br><br>
+
+            <label for="input-lname"> Last Name </label>
+            <input type="text" name="input-lname" id="input-lname" required><br><br>
+
+            <label for="input-email"> Email </label>
+            <input type="text" name="input-email" id="input-email" required><br><br>
+
+            <label for="input-gender"> Gender </label>
+            <select name="input-gender" id="input-gender" required>
+                <option value="">&nbsp;</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Non-Binary">Non-Binary</option>
+                <option value="Trans Male">Trans Male</option>
+                <option value="Trans Female">Trans Female</option>
+                <option value="Decline to state">Decline to state</option>
+            </select><br><br>
+
+            <label for="input-race_ethnicity"> Race/Ethnicity </label>
+            <select name="input-race_ethnicity" id="input-race_ethnicity" required>
+                <option value="">&nbsp;</option>
+                <option value="American Indian or Alaskan Native">American Indian or Alaskan Native</option>
+                <option value="Asian">Asian</option>
+                <option value="Black or African American">Black or African American</option>
+                <option value="Hispanic or Latino">Hispanic or Latino</option>
+                <option value="White, non-Hispanic">White, non-Hispanic</option>
+                <option value="Two or more races, non-Hispanic">Two or more races, non-Hispanic</option>
+                <option value="Pacific Islander">Pacific Islander</option>
+                <option value="Other">Other</option>
+                <option value="Prefer not to answer">Prefer not to answer</option>
+            </select><br>
+        </div>
+        </fieldset><br><br>
+        <input class="btn" type="submit" value="Save">
+        <input class="btn" type="button" value="Cancel" onClick="cancelAdd()">
+    </form>
+</div>
+
+<div id="update" style="display: none;">
+    <h2>Edit User</h2>
+    <form id="update-user-form">
+        <fieldset class="fields">
+        <div class="inner-border">
+            <label for="update-username"> Username </label>
+            <input type="text" name="update-username" id="update-username" required><br><br>
+
+            <label for="update-fname"> First Name </label>
+            <input type="text" name="update-fname" id="update-fname" required><br><br>
+
+            <label for="update-lname"> Last Name </label>
+            <input type="text" name="update-lname" id="update-lname" required><br><br>
+
+            <label for="update-email"> Email </label>
+            <input type="text" name="update-email" id="update-email" required><br><br>
+
+            <label for="update-gender"> Gender </label>
+            <select name="update-gender" id="update-gender" required>
+                <option value="">&nbsp;</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Non-Binary">Non-Binary</option>
+                <option value="Trans Male">Trans Male</option>
+                <option value="Trans Female">Trans Female</option>
+                <option value="Decline to state">Decline to state</option>
+            </select><br><br>
+
+            <label for="update-race-ethnicity"> Race/Ethnicity </label>
+            <select name="update-race-ethnicity" id="update-race-ethnicity" required>
+                <option value="">&nbsp;</option>
+                <option value="American Indian or Alaskan Native">American Indian or Alaskan Native</option>
+                <option value="Asian">Asian</option>
+                <option value="Black or African American">Black or African American</option>
+                <option value="Hispanic or Latino">Hispanic or Latino</option>
+                <option value="White, non-Hispanic">White, non-Hispanic</option>
+                <option value="Two or more races, non-Hispanic">Two or more races, non-Hispanic</option>
+                <option value="Pacific Islander">Pacific Islander</option>
+                <option value="Other">Other</option>
+                <option value="Prefer not to answer">Prefer not to answer</option>
+            </select><br>
+        </div>
+        </fieldset><br><br>
+        <input class="btn" type="submit" value="Save Changes">
+        <input class="btn" type="button" value="Cancel" onClick="cancelUpdate()">
+    </form>
+</div>
+
+<script src="./js/add_user.js"></script>
+<script src="./js/delete_user.js"></script>
+<script src="./js/update_user.js"></script>

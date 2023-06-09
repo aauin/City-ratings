@@ -1,0 +1,114 @@
+<!-- 
+    Group 55 - Erwin Laird and Amanda Dohring - Project Step 6
+
+    Citation for code adapted from CS340 Node.js Starter App
+    Date: 6/12/2023
+    Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main
+ -->
+
+<!-- ratings.hbs -->
+{{!-- Ratings table --}}
+<head>
+     <title>Users Cities</title>
+     <link href="/css/style.css" rel="stylesheet" type="text/css" />
+     <style>
+       @font-face {
+         font-family: 'CustomFont';
+         src: url('/myfont.otf') format('opentype');
+       }
+       #navigation-placeholder a.current,
+       #navigation-placeholder a[href="/ratings"] {
+         color: rgb(240,112,103);
+         font-family: 'CustomFont', sans-serif;
+         font-size: 40px;
+       }
+       th {
+          background-color: rgba(214, 185, 185, 0.733);
+      }
+     </style>
+ </head>
+<div id="browse">
+<table id="ratings-table" border="3" cellpadding="10">
+    <thead>
+        <br>
+        <tr>
+            <th>Rating ID</th>
+            <th>City/State</th>
+            <th>Category</th>
+            <th>Score</th>
+            <th>Username</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {{!-- For each row, print each column from the db for Users entity --}}
+        {{#each data}}
+        <tr>
+            <td>{{this.rating_id}}</td>
+            <td>{{this.city_id}}</td>
+            <td>{{this.category_id}}</td>
+            <td>{{this.score}}</td>
+            <td>{{this.user_id}}</td>
+
+            <td><a href="#" onClick="deleteRating({{this.rating_id}})">
+            <img src="/images/delete.png" alt="Delete" style="max-width: 15px; max-height: 80px; opacity: 0.7;" />
+            </a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+    <a id="addIcon" href="#" onClick="addRating()">
+        <img src="/images/add.png" alt="Add" style="max-width: 100px; max-height: 80px; opacity: 0.7;" />
+    </a>
+</div>
+
+<div id="insert" style="display: none;">
+    <h2>Add a New Rating</h2>
+    <form id="add-rating-form">
+        <fieldset class="fields">
+        <div class="inner-border">
+            <label for="input-city"> City and State </label>
+            <select name="input-city" id="input-city" required>
+                <option value="">&nbsp;</option>
+                {{#each cities}}
+                <option value="{{this.city_id}}">{{this.city_id}} - {{this.city}}, {{this.state}}</option>
+                {{/each}}
+            </select><br><br>
+
+            <label for="input-category"> Category </label>
+            <select name="input-category" id="input-category" required>
+                <option value="">&nbsp;</option>
+                {{#each categories}}
+                <option value="{{this.category_id}}">{{this.category_id}} - {{this.category_name}}</option>
+                {{/each}}
+            </select><br><br>
+
+            <label for="input-score"> Score </label>
+            <select name="input-score" id="input-score" required>
+                <option value="">&nbsp;</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select><br><br>
+
+            <label for="input-username"> Username </label>
+            <select name="input-username" id="input-username" required>
+                <option value="">&nbsp;</option>
+                {{#each users}}
+                <option value="{{this.user_id}}">{{this.user_id}} - {{this.username}}</option>
+                {{/each}}
+            </select><br><br>
+            
+        </div>
+        </fieldset><br><br>
+        <input class="btn" type="submit" value="Save">
+        <input class="btn" type="button" value="Cancel" onClick="cancelAdd()">
+    </form>
+</div>
+
+<script src="./js/add_rating.js"></script>
+<script src="./js/delete_rating.js"></script>

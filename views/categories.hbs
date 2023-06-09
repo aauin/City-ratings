@@ -1,0 +1,89 @@
+<!-- 
+    Group 55 - Erwin Laird and Amanda Dohring - Project Step 6
+
+    Citation for code adapted from CS340 Node.js Starter App
+    Date: 6/12/2023
+    Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main
+ -->
+
+<!-- categories.hbs -->
+{{!-- Categories table --}}
+<head>
+     <title>Categories</title>
+     <link href="/css/style.css" rel="stylesheet" type="text/css" />
+     <style>
+       @font-face {
+         font-family: 'CustomFont';
+         src: url('/myfont.otf') format('opentype');
+       }
+     
+       #navigation-placeholder a.current,
+       #navigation-placeholder a[href="/categories"] {
+         color: rgb(240,112,103);
+         font-family: 'CustomFont', sans-serif;
+         font-size: 40px;
+       }
+
+        table {
+          max-width: 800px;
+          width: 100%;
+       }
+
+       th {
+          background-color: rgba(214, 185, 185, 0.733);
+      }
+     </style>
+ </head>
+ 
+<div id="browse">
+<table id="categories-table" border="3" cellpadding="10">
+    <thead>
+        <br>
+        <tr>
+            <th>Category ID</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{!-- For each row, print each column from the db for Users entity --}}
+        {{#each data}}
+        <tr>
+            <td>{{this.category_id}}</td>
+            <td>{{this.category_name}}</td>
+            <td align="left">{{this.category_description}}</td>
+            <td>
+              <a href="#" onClick="deleteCategory({{this.category_id}})">
+              <img src="/images/delete.png" alt="Delete" style="max-width: 15px; max-height: 80px; opacity: 0.7;" />
+              </a>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+  <a id="addIcon" href="#" onClick="addCategory()">
+        <img src="/images/add.png" alt="Add" style="max-width: 100px; max-height: 80px; opacity: 0.7;" />
+  </a>
+</div>
+
+<div id="insert" style="display: none;">
+    <h2>Add a New Category</h2>
+    <form id="add-category-form">
+        <fieldset class="fields">
+        <div class="inner-border">
+            <label for="input-cat_name"> Category Name </label>
+            <input type="text" name="input-cat_name" id="input-cat_name" required><br><br>
+
+            <label for="input-description"> Description </label>
+            <input style="height: 150px; width: 350px;" type="text" align="left" name="input-description" id="input-description" required><br><br>
+
+        </div>
+        </fieldset><br><br>
+        <input class="btn" type="submit" value="Save">
+        <input class="btn" type="button" value="Cancel" onClick="cancelAdd()">
+    </form>
+</div>
+
+<script src="./js/add_category.js"></script>
+<script src="./js/delete_category.js"></script>
